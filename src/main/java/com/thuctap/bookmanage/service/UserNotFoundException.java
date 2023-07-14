@@ -1,4 +1,4 @@
-package com.thuctap.book.service;
+package com.thuctap.bookmanage.service;
 
 public class UserNotFoundException extends Exception {
     public UserNotFoundException(String message) {

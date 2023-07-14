@@ -1,4 +1,4 @@
-package com.thuctap.book.entity;
+package com.thuctap.bookmanage.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,8 +21,8 @@ public class Chapter {
     private int number;
     private String content;
     private int count_chapter;
-    private Long prechap;
-    private Long nextchap;
+    private Long preChap;
+    private Long nextChap;
     private LocalDate day;
     private LocalTime time;
 

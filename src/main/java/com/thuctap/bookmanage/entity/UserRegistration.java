@@ -1,6 +1,4 @@
-package com.thuctap.bookmanage.service;
-
-import com.thuctap.bookmanage.entity.User;
+package com.thuctap.bookmanage.entity;
 
 public class UserRegistration {
     private String photo;
@@ -11,7 +9,6 @@ public class UserRegistration {
     private String address;
     private String email;
     private int id_photo;
-    private String birthday;
 
     private int isEnabled;
 
@@ -66,6 +63,10 @@ public class UserRegistration {
         return address;
     }
 
+    public String getPhoto() {
+        return "user-photos/default/user_default.png";
+    }
+
     public void setAddress(String address) {
         this.address = address;
     }
@@ -86,11 +87,4 @@ public class UserRegistration {
         this.id_photo = id_photo;
     }
 
-    public String getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(String birthday) {
-        this.birthday = birthday;
-    }
 }

@@ -8,11 +8,46 @@
 </head>
 <style th:replace="Layout::style_layout"></style>
 <style>
-    .info{
-        height: 275px;
+    html {
+        height: 100%;
     }
 
-    .btn2{
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    .info {
+        height: 50px;
+        font-size: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 50px;
+    }
+
+    th, td {
+        padding: 20px;
+        text-align: center;
+        border-bottom: 3px solid #ddd;
+    }
+
+    th {
+        font-size: 20px;
+        font-weight: normal;
+    }
+
+    img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+
+    .btn2 {
         position: relative;
         display: block;
         padding: 5px 10px;
@@ -24,11 +59,11 @@
         transition: .5s;
         margin-top: 10px;
         letter-spacing: 4px;
-        background: rgba(0,0,0,.5);
+        background: rgba(0, 0, 0, .5);
         width: 150px;
     }
 
-    .btn2:hover{
+    .btn2:hover {
         background: #03e9f4;
         color: #fff;
         border-radius: 5px;
@@ -39,57 +74,46 @@
     }
 </style>
 <body>
-<div th:replace="Layout::content"></div>
-<div style="margin-top: 60px">
+<div th:replace="Layout::html_content"></div>
+<div>
     <table>
-        <tr style="color: #03e9f4;">
-            <th style="width: 180px">Name</th>
-            <th style="width: 200px">Avatar</th>
-            <th style="width: 180px">UserName</th>
-            <th style="width: 100px">Gender</th>
-            <th style="width: 300px">Address</th>
-            <th style="width: 180px">Birthday</th>
-            <th style="width: 150px;">Admin?</th>
+        <tr class="content" style="color: #5C469C; background: #D4ADFC">
+            <th style="width: 200px">Name</th>
+            <th style="width: 220px">Avatar</th>
+            <th style="width: 120px">Gender</th>
+            <th style="width: 175px;">Admin?</th>
             <th></th>
-
         </tr>
         <th:block th:each="user:${list_user}">
-            <tr class="info" style="color: #03e9f4;">
+            <tr class="info" style="color: #fff;">
                 <td>
                     <span th:text="${user.getName()}"></span>
                 </td>
                 <td>
-                    <img style="width:150px" th:src="@{${user.getPhotos()}}" /></td>
-                </td>
-                <td>
-                    <span th:text="${user.getUsername()}"></span>
+                    <img style="width:150px" th:src="@{${user.getPhoto()}}"/></td>
                 </td>
                 <td>
                     <span th:text="${user.getGender()}"></span>
                 </td>
-                <td>
-                    <span th:text="${user.getAddress()}"></span>
-                </td>
-                <td>
-                    <span th:text="${user.getBirthday()}"></span>
-                </td>
-                <td th:switch="${user.getID_p()}">
+                <td th:switch="${user.getId_photo()}">
                     <span th:case="0">User</span>
                     <span th:case="1">Admin</span>
                     <span th:case="2">Master admin</span>
                 </td>
                 <td>
-                    <form th:if="${user.getID_p() < 2}" th:action="@{uplevel}" method="post">
-                        <input type="hidden" name="id_user" th:value="${user.getID()}">
+                    <form th:if="${user.getId_photo() < 2}" th:action="@{uplevel}" method="post">
+                        <input type="hidden" name="id_user" th:value="${user.getId_user()}">
                         <button class="btn2" type="submit">Up <i class="fa fa-level-up" aria-hidden="true"></i></button>
                     </form>
-                    <form th:if="${user.getID_p() > 0}" th:action="@{downlevel}" method="post">
-                        <input type="hidden" name="id_user" th:value="${user.getID()}">
-                        <button class="btn2" type="submit">Down <i class="fa fa-level-down" aria-hidden="true"></i></button>
+                    <form th:if="${user.getId_photo() > 0}" th:action="@{downlevel}" method="post">
+                        <input type="hidden" name="id_user" th:value="${user.getId_user()}">
+                        <button class="btn2" type="submit">Down <i class="fa fa-level-down" aria-hidden="true"></i>
+                        </button>
                     </form>
                     <form th:action="@{delete_user}" method="post">
-                        <input type="hidden" name="id_user" th:value="${user.getID()}" >
-                        <button class="btn2" type="submit">Delete User <i class="fa fa-ban" aria-hidden="true"></i></button>
+                        <input type="hidden" name="id_user" th:value="${user.getId_user()}">
+                        <button class="btn2" type="submit">Delete User <i class="fa fa-ban" aria-hidden="true"></i>
+                        </button>
                     </form>
                 </td>
             </tr>

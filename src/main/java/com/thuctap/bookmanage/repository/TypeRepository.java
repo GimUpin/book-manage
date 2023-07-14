@@ -1,6 +1,6 @@
-package com.thuctap.book.respository;
+package com.thuctap.bookmanage.repository;
 
-import com.thuctap.book.entity.Type;
+import com.thuctap.bookmanage.entity.Type;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

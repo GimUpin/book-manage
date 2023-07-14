@@ -1,4 +1,4 @@
-package com.thuctap.book.entity;
+package com.thuctap.bookmanage.entity;
 
 import lombok.Data;
 import lombok.Getter;
@@ -10,7 +10,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 @NoArgsConstructor
 @Data
-
 @Entity
 @Table(name = "listbook")
 public class ListBook {

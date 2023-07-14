@@ -64,8 +64,8 @@
   <div class = "upload" style="text-align: center">
     <label>Photos: </label>
     <input style="color: #F0F0F0" type="file" name="image" accept="image/png, image/jpeg" />
-    <div th:if="${user.getPhotos()!=null}">
-      <img style="width:auto;height:200px;" th:src="@{${user.getPhotos()}}" />
+    <div th:if="${user.getPhoto()!=null}">
+      <img style="width:auto;height:200px;" th:src="@{${user.getPhoto()}}" />
     </div>
     <button class="btn" type="submit">Save</button>
   </div>

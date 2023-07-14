@@ -1,4 +1,4 @@
-package com.thuctap.book.entity;
+package com.thuctap.bookmanage.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

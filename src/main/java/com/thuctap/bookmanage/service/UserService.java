@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-public class LoginService {
+public class UserService {
 
     private final UserRepository userRepository;
     private final EmailService emailSender;
@@ -57,7 +57,6 @@ public class LoginService {
                                 user_registration.getGender(),
                                 token,
                                 0,
-                                user_registration.getPhoto(),
                                 0
                                 );
         String link = Utility.getSiteURL(request) + "/confirm_account?token=" + user.getToken();

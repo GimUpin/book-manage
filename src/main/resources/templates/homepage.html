@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="Layout :: html_head">
-    <meta charset="ISO-8859-1">
+    <meta charset="utf-8">
     <title>Home Page</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/cosmo/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -77,15 +77,13 @@
 </style>
 </head>
 <body>
-    <div th:replace="Layout :: content"></div>
+    <div th:replace="Layout :: html_content"></div>
 
     <div style="text-align: center; margin-top: 60px">
         <div th:if="${message != null}">
             <p class="text-warning">[[${message}]]</p>
         </div>
-        <div th:if="${user.getPhotos()!=null}">
-            <img style="width:auto;height:200px;" th:src="@{${user.getPhotos()}}" />
-        </div>
+
 
         <div class="column">
             <form th:action="@{/uploadphotos}" method="post">
@@ -100,7 +98,7 @@
             <form th:action="@{/change_password}" method="post">
                 <button class="btn btn2" type="submit">Change password</button>
             </form>
-            <div th:if="${user.getID_p() > 0}">
+            <div th:if="${user.getId_photo() > 0}">
                 <ul>
                     <li style="position: relative;">
                         <button class="btn btn2 admin" type="submit">I am Admin</button>
@@ -125,7 +123,9 @@
                 <button class="btn btn2" type="submit">Logout</button>
             </form>
         </div>
-
+        <div th:if="${user.getPhoto()!=null}">
+            <img style="width:auto;height:200px;" th:src="@{${user.getPhoto()}}"  alt="loading..."/>
+        </div>
         <div class="column" style="text-align: left">
             <div style="color:#03e9f4;">
                 Welcome <label th:text="${user.getName()}"> </label>
@@ -134,9 +134,6 @@
                 <br>
                 Email: <label th:text="${user.getEmail()}"></label>
                 <br>
-                Address: <label th:text="${user.getAddress()}"></label>
-                <br>
-                Birthday: <label th:text="${user.getBirthday()}"></label>
             </div>
         </div>
     </div>

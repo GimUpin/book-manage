@@ -1,9 +1,5 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="ISO-8859-1">
-  <title>Insert title here</title>
-</head>
 <head th:replace="Layout::html_head">
   <meta charset="UTF-8">
   <title>Select manga upload</title>
@@ -66,93 +62,35 @@
     float: left;
   }
   th {
-    border:1px solid #00b4cc;
+    border:1px solid #D4ADFC;
 
   }
   th, td{
     height: 10px;
     width: 100%;
-    color: #00B4CC;
+    color: #D4ADFC;
   }
   ::-webkit-scrollbar{
     width: 10px;
   }
 
-  div a {
-    text-decoration: none;
-    font-size: 20px;
-    padding: 15px;
-    display: inline-block;
-  }
-
-  ul li {display: inline-block;color: #03e9f4;}
-  ul li:hover {
-    background: #03e9f4;
-    color: #fff;
-    border-radius: 5px;
-    box-shadow: 0 0 5px #03e9f4,
-    0 0 25px #03e9f4,
-    0 0 50px #03e9f4,
-    0 0 100px #03e9f4;
-  }
-
-  ul li:hover ul {display: flex;}
-  ul li ul {
-
-    position: absolute;
-    width: 150px;
-    display: none;
-  }
-  ul li ul li {
-    background: rgba(0,0,0,.5);
-    display: block;
-    text-decoration: none;
-  }
-  ul li ul li a {display:block;color: #03e9f4;}
-  ul li ul li:hover,
-  ul li ul li:hover a{
-    background: #03e9f4;
-    text-decoration: none;
-    color: #fff;
-    border-radius: 5px;
-    box-shadow: 0 0 5px #03e9f4,
-    0 0 25px #03e9f4,
-    0 0 50px #03e9f4,
-    0 0 100px #03e9f4;}
-  ul li ul li a:hover{text-decoration: none;color: #fff;}
 </style>
 <body>
-<div th:replace="Layout::content"></div>
-<div style="margin-left: 60px;margin-top: 50px;" >
-  <ul>
-    <li>
-      <a style="display: block">Category</a>
-      <ul style="overflow: auto; max-height: 400px; width: 800px;flex-wrap: wrap;">
-        <li style="display: flex;flex: 1 0 21%;"><a th:href="@{selectCategory(id_category=0)}">All Categories</a></li>
-        <th:block th:each="category:${categories}">
-          <li style="display: flex;flex: 1 0 21%;"><a th:href="@{selectCategory(id_category=${category.getID()})}"><span th:text="${category.getName()}"></span></a></li>
-        </th:block>
-
-      </ul>
-    </li>
-  </ul>
-</div>
-<div style="margin-top: 10px"></div>
+<div th:replace="Layout::html_content"></div>
 <div id="list" style="height: 620px; overflow: auto">
   <ul style="display: flex;flex-wrap: wrap;">
-
-    <th:block th:each="manga:${list_manga}">
-      <a th:title="${manga.getContent()}" th:href="@{selectmanga(id_manga=${manga.getID()})}">
+    <th:block th:each="book:${list_book}">
+      <a th:title="${book.getDescription()}" th:href="@{selectbook(id_book=${book.getId_list()})}">
         <p>
         <ol>
           <section id="service" >
             <div class="food-service">
               <div class="box">
-                <img th:src="@{${manga.getImage()}}" style="text-align: center" alt="loading...">
+                <img th:src="@{${book.getImage()}}" style="text-align: center" alt="loading...">
                 <br>
-                <a th:href="@{selectmanga(id_manga=${manga.getID()})}" class="secondary-heading"> <span th:text="${manga.getName()}"></span> </a>
+                <a th:href="@{selectbook(id_book=${book.getId_list()})}" class="secondary-heading"> <span th:text="${book.getName_book()}"></span> </a>
                 <br>
-                <h2 class="secondary-heading" style="margin-left: 15px;">Have <span th:text="${manga.getCountchapter()}"></span> chap!</h2>
+                <h2 class="secondary-heading" style="margin-left: 15px;">Have <span th:text="${book.getCount_chapter()}"></span> chap!</h2>
               </div>
             </div>
           </section>
@@ -194,5 +132,3 @@
 </div>
 
 </body>
-
-</html>
