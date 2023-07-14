@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" >
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<head th:replace="Layout::html_head">
+  <meta charset="UTF-8">
+  <title>Select manga upload</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Add icon library -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<style th:replace="Layout::style_layout"></style>
+<body>
+<div th:replace="Layout::html_content"></div>
+<div style="margin-top: 50px"></div>
+<table>
+  <tr style="color: greenyellow;">
+    <th> Chapter number</th>
+    <th> Content</th>
+    <th> Count page</th>
+    <th> Day</th>
+    <th> Time</th>
+  </tr>
+  <th:block th:each="chapter:${chapter}">
+    <tr style="color: greenyellow;">
+      <td>
+        <a style="text-decoration: none"
+           th:href="@{chapterselection(id_manga = ${id_book},id_chapter = ${chapter.getId()})}">Chap
+          <span th:text="${chapter.getNumber()}"></span>
+        </a>
+      </td>
+      <td>
+        <a style="text-decoration: none"
+           th:href="@{chapterselection(id_manga = ${id_book},id_chapter = ${chapter.getId()})}">
+          <span th:text="${chapter.getContent()}"></span>
+        </a>
+      </td>
+    </tr>
+  </th:block>
+</table>
+</body>
+</html>
