@@ -9,9 +9,9 @@ import java.util.List;
 
 @Repository
 public interface TypeRepository extends JpaRepository<Type,Long> {
-    @Query("SELECT c.type_name FROM Type c where c.id = ?1")
+    @Query(value = "SELECT c.type_name FROM Type c where c.id = ?1", nativeQuery = true)
     String findNameByID(Long id);
 
-    @Query("SELECT c FROM Type c")
+    @Query(value = "SELECT c FROM Type c", nativeQuery = true)
     List<Type> showAllCategory();
 }

@@ -78,7 +78,7 @@ public class User_Controller {
         return "login";
     }
 
-    @PostMapping(value = {"/login"})
+    @PostMapping(value = {"/doLogin"})
     public String login(@Valid @RequestBody SigninRequest request, Model model){
         authenticationService.signin(request);
         model.addAttribute("id", String.valueOf(request.getId()));
@@ -105,8 +105,8 @@ public class User_Controller {
     public String ChangePasswordSuccess(@Param(value = "token") String token, Model model) throws UserNotFoundException {
         User user = userService.get(token);
         if(user != null){
-            userService.updatePassword(user,user.getNew_pass());
-            user.setNew_pass("");
+            userService.updatePassword(user,user.getNew_password());
+            user.setNew_password("");
             userService.save(user);
         }else{
             model.addAttribute("title","Reset your password!");
@@ -115,21 +115,18 @@ public class User_Controller {
         return "change_passwordSuccess";
     }
     @RequestMapping("/register")
-    public String register(Model model){
-        User user = new User();
-        model.addAttribute("user",user);
+    public String register(){
         return "register";
     }
     @PostMapping(value = "/registration",consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     public String success(@Valid @ModelAttribute SignupRequest request, BindingResult result, Model model) throws IllegalAccessException {
         if(result.hasErrors()){
-            model.addAttribute("user",new User());
             return "register";
         }
 
         if(Objects.nonNull(userService.checkEmail(request.getEmail()))) {
             return "redirect:/register?error_email";
-        }else{
+        } else {
             authenticationService.signup(request);
             model.addAttribute("message", "Check your email to confirm account!");
         }
@@ -227,7 +224,7 @@ public class User_Controller {
         if(!fileName.isEmpty()){
             user.setPhoto(fileName);
             userService.save(user);
-            String uploadDir = "user-photos/" + user.getId_user();
+            String uploadDir = "user-photos/" + user.getId();
             FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
             model.addAttribute("message", "Change avatar success!!!");
             return "homepage";

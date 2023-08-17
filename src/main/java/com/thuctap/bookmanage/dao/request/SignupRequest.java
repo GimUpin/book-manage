@@ -16,11 +16,10 @@ public class SignupRequest {
     @Size(min=4,max=20,message = "Name should have at least 4 characters and no more than 20 characters!!!")
     private String name;
     @NotBlank
-    @Size(min=6,max=20,message = "UserName should have at least 6 characters and no more than 20 characters!!!")
+    @Size(min=4,max=20,message = "Password should have at least 6 characters and no more than 20 characters!!!")
     private String password;
     @NotBlank
     private String gender;
     @NotBlank
     private String email;
-    private String photo;
 }

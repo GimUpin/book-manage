@@ -13,24 +13,24 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User,Long> {
-    @Query("SELECT c FROM User c WHERE c.email=?1 AND c.password=?2")
+    @Query(value = "SELECT * FROM User u WHERE u.email=?1 AND u.password=?2", nativeQuery = true)
     User findByUsernameAndPassword(String email, String password);
-    @Query("SELECT c FROM User c WHERE c.email = ?1")
+    @Query(value = "SELECT * FROM User u WHERE u.email = ?1", nativeQuery = true)
     User findByEmail(String email);
-    @Query("SELECT c FROM User c WHERE c.id_user=?1")
+    @Query(value = "SELECT * FROM User u WHERE u.id_user=?1", nativeQuery = true)
     User findByID(Long id_user);
-    @Query("SELECT c FROM User c WHERE c.id_user=?1")
+    @Query(value = "SELECT * FROM User u WHERE u.id_user=?1", nativeQuery = true)
     User findUserById(Long id);
 
-    @Query("SELECT c FROM User c")
+    @Query(value = "SELECT * FROM User u", nativeQuery = true)
     List<User> showAllUser();
 
-    @Query(value = "SELECT * FROM user u WHERE u.name = :name", nativeQuery = true)
-    Optional<User> findByName(@Param("name") String name);
+    @Query(value = "SELECT * FROM user u WHERE u.email = :email", nativeQuery = true)
+    Optional<User> findByUserName(@Param("email") String email);
 
     @Transactional
     @Modifying
-    @Query("DELETE FROM User c WHERE c.id_user = ?1")
+    @Query(value="DELETE FROM User c WHERE c.id_user = ?1", nativeQuery = true)
     void deleteUserByAdmin(Long id);
     public User findByToken(String token);
 }

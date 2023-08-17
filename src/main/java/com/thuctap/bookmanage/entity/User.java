@@ -20,23 +20,22 @@ import java.util.List;
 public class User implements UserDetails {
     @Id
     @GeneratedValue()
-    private Long id_user;
+    private Long id;
     private String name;
     private String password;
-    private String new_pass;
+    private String new_password;
     @Column(name = "token")
     private String token;
     private String gender;
     private String email;
-    private int id_photo;
-    @Column(name= "photo",nullable = true,  length = 128)
+    @Column(name= "photo")
     private String photo = null;
     @Enumerated(EnumType.STRING)
     private Role role;
     public String getPhoto() {
         if(photo == null)
             return "user-photos/default/user_default.png";
-        return "/user-photos/" + getId_photo() + "/" + photo;
+        return "/user-photos/" + getId() + "/" + photo;
     }
 
     @Override

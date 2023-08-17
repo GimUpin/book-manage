@@ -24,17 +24,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .email(request.getEmail())
                 .gender(request.getGender())
-                .photo(request.getPhoto())
                 .role(Role.USER)
                 .build();
         repo.save(user);
-
     }
 
     @Override
     public void signin(SigninRequest request) {
         SecurityContextHolder.getContext()
-                .setAuthentication(new UsernamePasswordAuthenticationToken(request.getName(), request.getPassword()));
+                .setAuthentication(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
     }
 

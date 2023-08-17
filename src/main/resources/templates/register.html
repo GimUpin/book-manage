@@ -206,44 +206,43 @@
     <div th:if ="${param.error_email}">
         <div class="alert alert-info">Email already exists!</div>
     </div>
-    <form th:action="@{/registration}" th:object="${user}" method="post">
+    <form th:action="@{/registration}" method="post">
         <div align="center">
             <strong style="color: #03e9f4;">User Register</strong>
         </div>
 
         <div class="user-box">
-            <input type="text" th:field="*{name}" required="">
-            <span style="color: #03e9f4" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name error</span>
+            <input type="text" name = "name" required="">
+<!--            <span style="color: #03e9f4" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name error</span>-->
             <label>Name</label>
         </div>
 
         <div class="user-box">
-            <input type="text" th:field="*{email}" required="">
-            <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}">E-mail error</span>
+            <input type="text" name = "email" required="">
+<!--            <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}">E-mail error</span>-->
             <label>Email</label>
         </div>
 
         <div class="user-box">
-            <input type="password" th:field="*{password}" required="">
-            <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}">password error</span>
+            <input type="password" name = "password" required="">
+<!--            <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}">password error</span>-->
             <label>Password</label>
         </div>
 
         <div class="user-box">
-            <input type="password" id="c_password" name="c_password" required="" oninput="checkPasswordMatch(this);">
-
+            <input type="password" id="c_password" name = "c_password" required="" oninput="checkPasswordMatch(this);">
             <label>Confirm Password</label>
         </div>
 
         <div class="user-box">
-            <select name="gender" th:field="*{gender}">
-                <option value="Man">Man</option>
-                <option value="Woman">Woman</option>
-            </select>
+            <label>
+                <select name="gender">
+                    <option value="Man">Man</option>
+                    <option value="Woman">Woman</option>
+                </select>
+            </label>
             <label>Gender</label>
         </div>
-
-
 
         <button type="submit">
             Register

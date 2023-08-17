@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
         return new UserDetailsService() {
             @Override
             public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-                return userRepository.findByName(username)
+                return userRepository.findByUserName(username)
                         .orElseThrow(() -> new UsernameNotFoundException("User not found"));
             }
         };
@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
     public void set_new_password(User user, String newPassword){
-        user.setNew_pass(newPassword);
+        user.setNew_password(newPassword);
         userRepository.save(user);
     }
 
@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
         String token = UUID.randomUUID().toString();
         user = userRepository.findByEmail(email);
         if(user.getPassword().equals(oldpass)){
-            user.setNew_pass(newpass);
+            user.setNew_password(newpass);
             user.setToken(token);
             String link = Utility.getSiteURL(request) + "/change_passwordSuccess?token=" + user.getToken();
             sendEmail(user, sendChangePassEmail(link));

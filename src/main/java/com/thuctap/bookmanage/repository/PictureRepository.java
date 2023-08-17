@@ -11,11 +11,11 @@ import java.util.List;
 
 @Repository
 public interface PictureRepository extends JpaRepository<Book, Long> {
-    @Query("SELECT c FROM Book c WHERE c.id_chapter =?1 order by c.id_book")
+    @Query(value = "SELECT c FROM Book c WHERE c.id_chapter =?1 order by c.id_book", nativeQuery = true)
     public List<Book> showBook(Long idChapter);
 
     @Transactional
     @Modifying
-    @Query("DELETE FROM Book c WHERE c.id_book=?1")
+    @Query(value = "DELETE FROM Book c WHERE c.id_book=?1", nativeQuery = true)
     void deleteOnePageById(Long idPage);
 }

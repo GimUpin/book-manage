@@ -11,12 +11,12 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 @Repository
 public interface ChapterRepository extends JpaRepository<Chapter,Long> {
-    @Query("SELECT c FROM Chapter c WHERE c.id_chapter=?1 ORDER BY c.id_chapter")
+    @Query(value = "SELECT c FROM Chapter c WHERE c.id_chapter=?1 ORDER BY c.id_chapter", nativeQuery = true)
 
     public List<Chapter> showAllChapterById(Long idBook);
 
     @Transactional
     @Modifying
-    @Query("DELETE FROM Chapter c WHERE c.id_chapter=?1")
+    @Query(value = "DELETE FROM Chapter c WHERE c.id_chapter=?1", nativeQuery = true)
     public void deleteChapterById(Long idChapter);
 }
