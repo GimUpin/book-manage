@@ -5,9 +5,12 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
+
 @Repository
 public interface UserRepository extends JpaRepository<User,Long> {
     @Query("SELECT c FROM User c WHERE c.email=?1 AND c.password=?2")
@@ -21,6 +24,9 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     @Query("SELECT c FROM User c")
     List<User> showAllUser();
+
+    @Query(value = "SELECT * FROM user u WHERE u.name = :name", nativeQuery = true)
+    Optional<User> findByName(@Param("name") String name);
 
     @Transactional
     @Modifying

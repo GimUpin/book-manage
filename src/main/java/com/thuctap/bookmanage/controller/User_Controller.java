@@ -1,19 +1,26 @@
 package com.thuctap.bookmanage.controller;
 
+import com.thuctap.bookmanage.dao.request.SigninRequest;
+import com.thuctap.bookmanage.dao.request.SignupRequest;
 import com.thuctap.bookmanage.entity.Type;
 import com.thuctap.bookmanage.entity.User;
 import com.thuctap.bookmanage.photos.userID.FileUploadUtil;
 import com.thuctap.bookmanage.repository.TypeRepository;
-import com.thuctap.bookmanage.repository.UserRepository;
+import com.thuctap.bookmanage.service.AuthenticationService;
 import com.thuctap.bookmanage.service.UserService;
 import com.thuctap.bookmanage.service.UserNotFoundException;
-import com.thuctap.bookmanage.entity.UserRegistration;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -29,8 +36,9 @@ import java.util.Objects;
 @Controller
 public class User_Controller {
 
+    private final AuthenticationService authenticationService;
     private final UserService userService;
-    private final UserRepository userRepository;
+//    private final UserRepository userRepository;
     private final TypeRepository typeRepository;
 
 
@@ -63,32 +71,19 @@ public class User_Controller {
     }
     @RequestMapping("/login")
     public String view_login(User user, HttpServletRequest request, Model model){
-        HttpSession session = request.getSession();
-        if(session.getAttribute("id") != null){
-            return HomePage(request,model);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken)){
+            return "redirect:/";
         }
         return "login";
     }
 
     @PostMapping(value = {"/login"})
-    public String login(@ModelAttribute("user") User user , Model model, HttpServletRequest request){
-        User oauthUser = userService.login(user.getEmail(), user.getPassword());
-        HttpSession session = request.getSession();
-        if (Objects.nonNull(oauthUser)) {
-            if(oauthUser.isEnable() == 1) {
-                model.addAttribute("id", String.valueOf(oauthUser.getId_user()));
-                session.setAttribute("id", String.valueOf(oauthUser.getId_user()));
-                model.addAttribute("user", oauthUser);
-                return "homepage";
-            } else {
-                model.addAttribute("message", "The username or password is incorrect!");
-                return "login";
-            }
-        }
-        else {
-            model.addAttribute("message", "The username is disable!");
-        }
-        return "login";
+    public String login(@Valid @RequestBody SigninRequest request, Model model){
+        authenticationService.signin(request);
+        model.addAttribute("id", String.valueOf(request.getId()));
+        model.addAttribute("user",request);
+        return "homepage";
 
     }
     @RequestMapping(value = "/change_password")
@@ -112,7 +107,7 @@ public class User_Controller {
         if(user != null){
             userService.updatePassword(user,user.getNew_pass());
             user.setNew_pass("");
-            userRepository.save(user);
+            userService.save(user);
         }else{
             model.addAttribute("title","Reset your password!");
             model.addAttribute("message","Invalid token");
@@ -121,20 +116,21 @@ public class User_Controller {
     }
     @RequestMapping("/register")
     public String register(Model model){
-        UserRegistration user = new UserRegistration();
+        User user = new User();
         model.addAttribute("user",user);
         return "register";
     }
     @PostMapping(value = "/registration",consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-    public String success(@Valid @ModelAttribute("user") UserRegistration user, BindingResult result, Model model,HttpServletRequest request) throws IllegalAccessException {
+    public String success(@Valid @ModelAttribute SignupRequest request, BindingResult result, Model model) throws IllegalAccessException {
         if(result.hasErrors()){
-            model.addAttribute("user",new UserRegistration());
+            model.addAttribute("user",new User());
             return "register";
         }
-        if(Objects.nonNull(userService.checkEmail(user.getEmail()))) {
+
+        if(Objects.nonNull(userService.checkEmail(request.getEmail()))) {
             return "redirect:/register?error_email";
         }else{
-            userService.save(user,request);
+            authenticationService.signup(request);
             model.addAttribute("message", "Check your email to confirm account!");
         }
         return "register";
@@ -143,10 +139,8 @@ public class User_Controller {
     public String confirmRegistration(@Param(value = "token") String token, Model model){
         User user = userService.get(token);
         if(Objects.nonNull(user)){
-            user.setEnable(1);
             user.setToken(null);
-            userRepository.save(user);
-
+            userService.save(user);
         }
         return "confirm_account";
     }
@@ -192,12 +186,21 @@ public class User_Controller {
     }
 
     @RequestMapping("/logout")
-    public String logout(HttpServletRequest request,Model model)
+    public String logout(HttpServletRequest request, HttpServletResponse response)
     {
-        HttpSession session = request.getSession();
-        session.removeAttribute("id");
-        model.addAttribute("id",null);
-        model.addAttribute("user",new User());
+        SecurityContextHolder.clearContext();
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("JSESSIONID")) {
+                    cookie.setValue("");
+                    cookie.setPath("/");
+                    cookie.setMaxAge(0);
+                    response.addCookie(cookie);
+                    break;
+                }
+            }
+        }
         return "/index";
     }
 
@@ -217,13 +220,13 @@ public class User_Controller {
         if(session.getAttribute("id") == null){
             return HomePage(request,model);
         }
-        Long id = Long.parseLong(session.getAttribute("id").toString());
-        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+        long id = Long.parseLong(session.getAttribute("id").toString());
+        String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
         User user = userService.findUser(id);
         model.addAttribute("user",user);
         if(!fileName.isEmpty()){
             user.setPhoto(fileName);
-            userRepository.save(user);
+            userService.save(user);
             String uploadDir = "user-photos/" + user.getId_user();
             FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
             model.addAttribute("message", "Change avatar success!!!");

@@ -3,124 +3,69 @@ package com.thuctap.bookmanage.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
+import java.util.List;
+
+@Builder
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "user")
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue()
     private Long id_user;
-    @NotBlank
-    @Size(min=4,max=20,message = "Name should have at least 4 characters and no more than 20 characters!!!")
     private String name;
-    @NotBlank
-    @Size(min=6,max=20,message = "UserName should have at least 6 characters and no more than 20 characters!!!")
     private String password;
     private String new_pass;
     @Column(name = "token")
     private String token;
     private String gender;
-    @NotBlank
     private String email;
-    @NotBlank
     private int id_photo;
     @Column(name= "photo",nullable = true,  length = 128)
     private String photo = null;
-    public int isEnable;
-
-    public void setEnable(int enable) {
-        isEnable = enable;
-    }
-
-    public String getNew_pass() {
-        return new_pass;
-    }
-
-    public void setNew_pass(String new_pass) {
-        this.new_pass = new_pass;
-    }
-
-    public int isEnable() {
-        return isEnable;
-    }
-
-
-    public User(String name, String email, String password, String gender, String token, int id_photo, int isEnable){
-        super();
-        this.name = name;
-        this.password = password;
-        this.gender = gender;
-        this.email = email;
-        this.token = token;
-        this.id_photo = id_photo;
-        this.isEnable = isEnable;
-    }
-
-
-    public Long getId_user() {
-        return id_user;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public int getId_photo() {
-        return id_photo;
-    }
-
-    public void setId_photo(int id_photo) {
-        this.id_photo = id_photo;
-    }
-
+    @Enumerated(EnumType.STRING)
+    private Role role;
     public String getPhoto() {
         if(photo == null)
             return "user-photos/default/user_default.png";
         return "/user-photos/" + getId_photo() + "/" + photo;
     }
 
-    public void setPhoto(String photo) {
-        this.photo = photo;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
-    public String getGender() {
-        return gender;
+    @Override
+    public String getUsername() {
+        return name;
     }
 
-    public void setGender(String gender) {
-        this.gender = gender;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
     }
 
-    public String getEmail() {
-        return email;
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
     }
 
-    public String getToken() {
-        return token;
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
 }
